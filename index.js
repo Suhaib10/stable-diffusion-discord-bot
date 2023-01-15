@@ -776,6 +776,10 @@ async function postRender(render){
           }catch (err){console.error(err);bot.createMessage(job.channel,'Sorry <@' + job.userid + '> but your image was too big for all available image hosts, contact an admin for your image `' + filename + '.png`')}
         }
       }
+      fs.unlink(filename+'.png', (err) => {
+	    if (err) throw err //handle your error the way you want to;
+	    console.log(filename+'.png was deleted');//or else the file will be deleted
+      });
     }
     })
   }
