@@ -1116,8 +1116,8 @@ bot.on("interactionCreate", async (interaction) => {
       var newCmd=''
       var postProcess=false
       switch(interaction.data.custom_id.split('-')[0].replace('twk','')){
-        case 'scalePlus': newJob.scale=newJob.scale+5;break
-        case 'scaleMinus': newJob.scale=newJob.scale-5;break
+        case 'scalePlus': newJob.scale=newJob.scale+2;break
+        case 'scaleMinus': newJob.scale=newJob.scale-2;break
         case 'stepsPlus': newJob.steps=newJob.steps+10;break
         case 'stepsMinus': newJob.steps=newJob.steps-10;break
         case 'aspectPortrait': newJob.height=defaultSize+192;newJob.width=defaultSize;break
