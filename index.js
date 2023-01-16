@@ -213,7 +213,7 @@ function request(request){
   if (!args.gfpgan_strength){args.gfpgan_strength=0}
   if (!args.codeformer_strength){args.codeformer_strength=0}
   if (!args.upscale_level){args.upscale_level=''}
-  if (!args.upscale_strength){args.upscale_strength=0.5}
+  if (!args.upscale_strength){args.upscale_strength=0.7}
   if (!args.variation_amount||args.variation_amount>1||args.variation_amount<0){args.variation_amount=0}
   if (!args.with_variations){args.with_variations=[]}else{log(args.with_variations)}//; args.with_variations=args.with_variations.toString()
   if (!args.threshold){args.threshold=0}
