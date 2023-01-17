@@ -723,10 +723,11 @@ async function postRender(render){
       if(filesize<defaultMaxDiscordFileSize){ // Within discord 8mb filesize limit
         try{bot.createMessage(job.channel, newMessage, {file: data, name: filename + '.png'}).then(m=>{}).catch((err)=>{log('caught error posting to discord in channel '.bgRed+job.channel);log(err)})}
         catch(err){console.error(err)}
+		deleteFile(render)
       }else{
         if(imgurEnabled()&&filesize<10000000){
           bot.createMessage(job.channel,'<@'+job.userid + '> your image was too big for discord, uploading to imgur now..')
-          try { imgurupload(render.filename).then(upload => { bot.createMessage(job.channel,{ content: msg, embeds: [{image: {url: upload.link}, description:job.prompt}]}) }) }
+          try { imgurupload(render.filename).then(upload => { bot.createMessage(job.channel,{ content: msg, embeds: [{image: {url: upload.link}, description:job.prompt}]}), deleteFile(render) }) }
           catch (err) { console.error(err); bot.createMessage(job.channel,'Sorry <@' + job.userid + '> imgur uploading failed, contact an admin for your image `' + filename + '.png`') }
         // disabled imgbb as it was unreliable
         /*} else if (imgbbEnabled() && filesize < 32000000) {
@@ -745,20 +746,33 @@ async function postRender(render){
             .then((response)=>{
               var oshiimg=response.data.split('DL: ')[1]
               bot.createMessage(job.channel,{ content: msg+'\n '+(filesize/1000000).toFixed(2)+'MB image uploaded to oshi.at : '+oshiimg, embeds: [{description:job.prompt, color: getRandomColorDec()}]})
+			  deleteFile(render)
             })
             .catch((error) => console.error(error))
           }catch (err){console.error(err);bot.createMessage(job.channel,'Sorry <@' + job.userid + '> but your image was too big for all available image hosts, contact an admin for your image `' + filename + '.png`')}
         }
       }
-      fs.unlink(filename+'.png', (err) => {
-	    if (err) throw err //handle your error the way you want to;
-	    console.log(filename+'.png was deleted');//or else the file will be deleted
-      });
     }
     })
   }
   catch(err) {console.error(err)}
+  // Delete file locally after its posted
+/*   fs.readFile(render.filename, null, function(err, data){
+	filename=render.filename.split('\\')[render.filename.split('\\').length-1]
+	fs.unlink(filename, (err) => {
+	  if (err) throw err //handle your error the way you want to;
+	  log('File was successfully deleted');//or else the file will be deleted
+    });
+  }) */
 }
+
+function deleteFile (render){// Monitor new files entering watchFolder, post image with filename.
+  fs.unlink(render.filename, (err) => {
+	//if (err) throw err //handle your error the way you want to;
+	log('File was successfully deleted');//or else the file will be deleted
+  });
+}
+
 function processQueue(){
   // WIP attempt to make a harder to dominate queue
   // TODO make a queueing system that prioritizes the users that have recharged the most
